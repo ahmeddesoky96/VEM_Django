@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'mall.apps.MallConfig',
     'accounts.apps.AccountsConfig',
 
-    # 'rest_framework_simplejwt',#
+    'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist'#
 
 ]
@@ -103,7 +103,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kinddark1996@gmail.com'
-EMAIL_HOST_PASSWORD = 'xqyowciecfusfbuq'
+EMAIL_HOST_PASSWORD = 'ltcenggojndfqqww'
+DEFAULT_FROM_EMAIL = 'kinddark1996@gmail.com'
 EMAIL_USE_TLS = True
 
 ##### email: kinddark1996@gmail.com
@@ -178,7 +179,11 @@ SIMPLE_JWT = {
 }
 
 
+# DOMAIN = '127.0.0.1:3000'
 
+SITE_NAME = 'VEM Team'
+##'activate/{uid}/{token}'
+# EMAIL_BACKEND = 'custom_email_backend.CustomEmailBackend'
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
