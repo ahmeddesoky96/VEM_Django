@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'djoser',
     'mall.apps.MallConfig',
     'accounts.apps.AccountsConfig',
-
+    'rest_framework.authtoken',#
     'rest_framework_simplejwt',
-    # 'rest_framework_simplejwt.token_blacklist'#
+    'rest_framework_simplejwt.token_blacklist'#
 
 ]
 
@@ -60,7 +60,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',#
+
 ]
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'VEM_Django2.urls'
@@ -76,8 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'social_django.context_processors.backends',#
-                # 'social_django.context_processors.login_redirect'#
+                'social_django.context_processors.backends',#
+                'social_django.context_processors.login_redirect'#
             ],
         },
     },
@@ -103,9 +106,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'kinddark1996@gmail.com'
-EMAIL_HOST_PASSWORD = 'ltcenggojndfqqww'
+EMAIL_HOST_PASSWORD = 'ehirfkriabaczukw'
 DEFAULT_FROM_EMAIL = 'kinddark1996@gmail.com'
 EMAIL_USE_TLS = True
+
 
 ##### email: kinddark1996@gmail.com
 #### password : xqyowciecfusfbuq
@@ -163,19 +167,19 @@ REST_FRAMEWORK = {
 }
 
 
-# AUTHENTICATION_BACKENDS = (
-#     'social_core.backends.google.GoogleOAuth2',
-#     'social_core.backends.facebook.FacebookOAuth2',
-#     'django.contrib.auth.backends.ModelBackend'
-# )
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+)
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    # 'AUTH_TOKEN_CLASSES': (
-    #     'rest_framework_simplejwt.tokens.AccessToken',
-    # )
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.AccessToken',
+    )
 }
 
 
@@ -199,7 +203,7 @@ DJOSER = {
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
         'user': 'accounts.serializers.UserCreateSerializer',
-        # 'current_user': 'accounts.serializers.UserCreateSerializer',
+        'current_user': 'accounts.serializers.UserCreateSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
