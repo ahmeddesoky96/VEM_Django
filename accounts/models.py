@@ -22,7 +22,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin,models.Model):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='static/profile_pictures/', blank=True, null=True, default='static/profile_pictures/profile.png')
+    profile_picture = models.ImageField(upload_to='build/static/profile_pictures/', blank=True, null=True, default='static/profile_pictures/profile.png')
     birth_date = models.DateField(blank=True, null=True)
     location = models.CharField(max_length=100 ,default='Location')
     is_seller = models.BooleanField(default=False)
