@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import UserAccount
-from django.db.models import Avg
+from django.db.models import Avg,Sum,Count
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -20,7 +20,7 @@ class Template(models.Model):
 
 class Shop(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100,unique=True)
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     details = models.TextField()
     image = models.ImageField(upload_to='build/static/shop_images/', default="build/static/shop_images/image1.png")    #why image for shop!
@@ -29,13 +29,25 @@ class Shop(models.Model):
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     report_count = models.PositiveIntegerField(default=0)
+    shop_url = models.CharField(max_length=255, unique=True,default='url')
     
+    def save(self, *args, **kwargs):
+        self.shop_url = f"{self.owner.first_name}-{self.owner.last_name}-{self.title}/{self.template}"
+        super().save(*args, **kwargs)
+
     def calculate_total_rating(self):
         ratings = ShopRate.objects.filter(shop=self)
         if ratings.exists():
             self.total_rate = ratings.aggregate(Avg('rate'))['rate__avg']
         else:
             self.total_rate = 0
+
+    def calculate_total_report(self):
+        reports = ShopReport.objects.filter(shop=self)
+        if reports.exists():
+            self.report_count = reports.aggregate(Count('report_state'))['report_state__sum']
+        else:
+            self.report_count = 0
 
     def __str__(self):
         return self.title
@@ -48,31 +60,35 @@ class Product(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='build/static/product_pictures/', blank=True, null=True, default='build/static/product_pictures/profile.png')
+    product_id = models.CharField(default="Default")
+    price_id = models.CharField(default="Default")
     quantity = models.PositiveIntegerField(default=0)
+    total_rate = models.DecimalField(max_digits=3, decimal_places=2,default=0)
     # total_like = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     report_count = models.PositiveIntegerField(default=0)
 
-    @property
     def calculate_total_rating(self):
         ratings = ProductRate.objects.filter(product=self)
         if ratings.exists():
-            return ratings.aggregate(Avg('rate'))['rate__avg']
+            self.total_rate = ratings.aggregate(Avg('rate'))['rate__avg']
+            # return ratings.aggregate(Avg('rate'))['rate__avg']
         else:
-            return 0
+            self.total_rate = 0
     
 
     def __str__(self):
         return self.title
 
 
-class ProductPicture(models.Model):
-    id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    picture = models.ImageField(upload_to='build/static/product_images/')
+# class ProductPicture(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     picture = models.ImageField(upload_to='build/static/product_images/')
 
-    def __str__(self):
-        return f'{self.product.title} - {self.id}'
+#     def __str__(self):
+#         return f'{self.product.title} - {self.id}'
 
 
 class CommentProduct(models.Model):
@@ -95,6 +111,28 @@ class CommentShop(models.Model):
 
     def __str__(self):
         return f'{self.user.email} - {self.shop.title}'
+    
+    def calculate_total_report(self):
+        reports = CommentShopReport.objects.filter(comment=self)
+        if reports.exists():
+            self.report_count = reports.aggregate(Sum('report_state'))['report_state__sum']
+        else:
+            self.report_count = 0
+
+class CommentShopReport(models.Model):
+    id = models.AutoField(primary_key=True)
+    comment = models.ForeignKey(CommentProduct, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    report_type_choices = [
+        ('Inappropriate Content', 'Inappropriate Content'),
+        ('Spam', 'Spam'),
+        ('Other', 'Other')
+    ]
+    report_type = models.CharField(max_length=50, choices=report_type_choices)
+
+    def __str__(self):
+        return f'{self.user.email} - {self.comment.comment_body}'
+
 
 
 class ProductReport(models.Model):
@@ -121,7 +159,7 @@ class ShopReport(models.Model):
         ('Fake Shop', 'Fake Shop'),
         ('Other', 'Other')
     ]
-    report_type = models.CharField(max_length=50, choices=report_type_choices)
+    report_type = models.CharField(max_length=50, choices=report_type_choices,null=True)
 
     def __str__(self):
         return f'{self.user.email} - {self.shop.title}'
@@ -148,6 +186,11 @@ class ProductRate(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     rate = models.PositiveIntegerField()
 
+    def save(self, *args, **kwargs):
+        super(ProductRate, self).save(*args, **kwargs)
+        self.product.calculate_total_rating()
+        self.product.save()
+    
     def __str__(self):
         return f'{self.user.email} - {self.product.title}'
 

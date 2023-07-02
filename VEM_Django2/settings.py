@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',#
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist'#
+    
 
 ]
 
@@ -67,6 +68,19 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'VEM_Django2.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    # Add any other trusted origins here
+]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 TEMPLATES = [
     {
@@ -195,8 +209,10 @@ SIMPLE_JWT = {
 #     )
 # }
 
-
+SITE_URL = 'http://localhost:3000'
 # DOMAIN = '127.0.0.1:3000'
+STRIPE_SECRET_KEY = 'sk_test_51NMIFzKIlhL0Db7Da5PovnFYFlDshTKNXhen2YpzOuEr3ja6oKxmhLtfDvjIU63Oef3z4opN8azdGEE43LsDqpN300V9PIFmXW'
+
 
 SITE_NAME = 'VEM Team'
 ##'activate/{uid}/{token}'
