@@ -26,7 +26,7 @@ class ShopDisplayOwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shop
-        fields = ['id', 'title', 'owner', 'details', 'image', 'category', 'total_rate', 'template', 'created_at', 'report_count', 'shop_url']
+        fields = ['id', 'title', 'owner', 'details', 'image', 'category', 'total_rate', 'template', 'created_at', 'report_count', 'shop_url','profile_image']
 ############# End serializer for display shop details ##################  
 
 
@@ -125,3 +125,23 @@ class AddCommentProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentProduct
         fields = ( 'product', 'user', 'comment_body')
+
+
+
+###############serializer allam#########
+class ShopSerializer(serializers.ModelSerializer):
+    # category = CategorySerializer()
+    # template = TemplateSerializer()
+
+    class Meta:
+        model = Shop
+        fields = '__all__'
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class TemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Template
+        fields = '__all__'

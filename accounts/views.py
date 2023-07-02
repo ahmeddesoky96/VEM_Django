@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 ##################################
 
 from rest_framework import generics
+from django.shortcuts import  get_object_or_404,get_list_or_404
 
 
 
@@ -50,10 +51,21 @@ class ProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = UserAccount.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserUpdateSerializer
 
-    def get_object(self):
-        return self.queryset.get(pk=self.request.user.id)
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    profile = get_object_or_404(UserAccount, pk=request.user.id)
+    serializer = UserUpdateSerializer(profile, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET'])

@@ -24,6 +24,7 @@ class Shop(models.Model):
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     details = models.TextField()
     image = models.ImageField(upload_to='build/static/shop_images/', default="build/static/shop_images/image1.png")    #why image for shop!
+    profile_image = models.ImageField(upload_to='build/static/shop_images/', default="build/static/shop_images/image1.png")    #why image for shop!
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     total_rate = models.DecimalField(max_digits=3, decimal_places=2,default=0)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
@@ -45,7 +46,7 @@ class Shop(models.Model):
     def calculate_total_report(self):
         reports = ShopReport.objects.filter(shop=self)
         if reports.exists():
-            self.report_count = reports.aggregate(Count('report_state'))['report_state__sum']
+            self.report_count = reports.aggregate(Count('id'))['report_state__sum']
         else:
             self.report_count = 0
 
@@ -160,6 +161,13 @@ class ShopReport(models.Model):
         ('Other', 'Other')
     ]
     report_type = models.CharField(max_length=50, choices=report_type_choices,null=True)
+
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Check if instance is new
+            self.shop.report_count += 1
+            self.shop.save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user.email} - {self.shop.title}'

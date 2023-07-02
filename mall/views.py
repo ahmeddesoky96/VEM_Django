@@ -434,3 +434,50 @@ class AllShopList(generics.ListAPIView):
     permission_classes = [AllowAny]
     queryset = Shop.objects.all()
     serializer_class = ShopDisplayOwnerSerializer
+
+
+
+
+
+
+
+
+class ShopList(generics.ListAPIView):
+    serializer_class = ShopSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        owner_id = self.kwargs['id']
+        return Shop.objects.filter(owner=owner_id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        categories = Category.objects.all()
+        templates = Template.objects.all()
+        category_serializer = CategorySerializer(categories, many=True)
+        template_serializer = TemplateSerializer(templates, many=True)
+
+        data = {
+            'shops': serializer.data,
+            'categories': category_serializer.data,
+            'templates': template_serializer.data
+        }
+
+        # Return the response as a JSON object
+        return Response(data)
+    
+class ShopDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+
+
+class ShopCreate(generics.CreateAPIView):
+    serializer_class = ShopSerializer
+
+
+
+class ShopDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer

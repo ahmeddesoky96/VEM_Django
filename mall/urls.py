@@ -15,6 +15,11 @@ urlpatterns = [
     path('add-rate/',add_update_rate, name='add_update_rate'),
     path('set-report/',set_shop_report, name='set_shop_report'),
     path('allshops/', AllShopList.as_view(), name='all_shop-list'),# all
+    path('<int:id>/', ShopList.as_view(), name='shop-list'),# one_shop
+    path('add/', ShopCreate.as_view(), name='shop-create'),
+    path('shopdetails/<int:pk>/', ShopDetail.as_view(), name='shop-detail'),
+
+
 
 
     ######### products url
