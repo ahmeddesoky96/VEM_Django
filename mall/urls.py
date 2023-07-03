@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path,re_path
+from django.views.generic import TemplateView
 from mall.views import *
 from django.conf import settings
 from django.conf.urls.static import static
