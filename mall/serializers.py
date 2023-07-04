@@ -85,7 +85,10 @@ class ProductRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductRate
         fields = '__all__'
-
+class ProductDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductRate
+        fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     ownerEmail = serializers.EmailField(write_only=True)

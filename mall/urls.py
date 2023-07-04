@@ -19,6 +19,7 @@ urlpatterns = [
     path('<int:id>/', ShopList.as_view(), name='shop-list'),# one_shop
     path('add/', ShopCreate.as_view(), name='shop-create'),
     path('shopdetails/<int:pk>/', ShopDetail.as_view(), name='shop-detail'),
+    path('shops/', NewShopView.as_view(), name='new-shops'),
 
 
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('products/comments/<int:id>/', product_comments, name='product_comments'),
     path('products/comments/create/', new_product_comment, name='new_product_comment'),
     path('products/add-rate/', add_product_rate, name='add_product_rate'),
+    path('products/delete/<int:pk>', ProductDelete.as_view(), name='delete_product'),
     
     path('create-checkout-session', StripeCheckoutView.as_view()),
     
