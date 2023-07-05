@@ -7,9 +7,9 @@ from accounts.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-    path('auth/', include('djoser.social.urls')),
+    path('account/', include('djoser.urls')),
+    path('account/', include('djoser.urls.jwt')),
+    path('account/', include('djoser.social.urls')),
     # path('profile/', ViewProfileApiView.as_view(),name="profile"),
 ]
 
