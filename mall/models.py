@@ -1,8 +1,6 @@
 from django.db import models
-# from profiles.models import Profile
+from accounts.models import UserAccount
 from django.db.models import Avg
-from accounts.models import *
-
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -25,11 +23,19 @@ class Shop(models.Model):
     title = models.CharField(max_length=100)
     owner = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     details = models.TextField()
-    # image = models.ImageField(upload_to='shop_images/')    #why image for shop!
+    image = models.ImageField(upload_to='build/static/shop_images/', default="build/static/shop_images/image1.png")    #why image for shop!
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    total_rate = models.DecimalField(max_digits=3, decimal_places=2,default=0)
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     report_count = models.PositiveIntegerField(default=0)
+    
+    def calculate_total_rating(self):
+        ratings = ShopRate.objects.filter(shop=self)
+        if ratings.exists():
+            self.total_rate = ratings.aggregate(Avg('rate'))['rate__avg']
+        else:
+            self.total_rate = 0
 
     def __str__(self):
         return self.title
@@ -63,7 +69,7 @@ class Product(models.Model):
 class ProductPicture(models.Model):
     id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    picture = models.ImageField(upload_to='static/product_images/')
+    picture = models.ImageField(upload_to='build/static/product_images/')
 
     def __str__(self):
         return f'{self.product.title} - {self.id}'
@@ -151,6 +157,12 @@ class ShopRate(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     rate = models.PositiveIntegerField()
+    
+    def save(self, *args, **kwargs):
+        super(ShopRate, self).save(*args, **kwargs)
+        self.shop.calculate_total_rating()
+        self.shop.save()
+
 
     def __str__(self):
         return f'{self.user.email} - {self.shop.title}'
