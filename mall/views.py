@@ -306,6 +306,14 @@ class StripeCheckoutView(APIView):
 
 #################################### update product ###########################
 
+
+
+class ProductDelete(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Product.objects.all()
+    serializer_class = ProductDeleteSerializer
+
 @api_view(['PUT'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -360,9 +368,9 @@ def update_product(req, pk):
 #################################### display product info ###########################
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-# @permission_classes([AllowAny])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def display_product(request,id):
     current_product =Product.objects.get(pk=id)
     if(current_product):
@@ -374,9 +382,9 @@ def display_product(request,id):
 #################################### get product  comments ###########################
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-# @permission_classes([AllowAny])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def product_comments(request,id):
     current_product_comments =CommentProduct.objects.filter(product=id)
     if(current_product_comments):
@@ -392,9 +400,11 @@ def product_comments(request,id):
 @permission_classes([IsAuthenticated])
 def new_product_comment(request):
     serializer = AddCommentProductSerializer(data=request.data)
+    print(serializer)
     if serializer.is_valid():
+        print(serializer.errors)
         serializer.save(user=request.user) # assuming the request includes a valid user token
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_201_CREATED)
     else:
         print(serializer.errors)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -481,3 +491,12 @@ class ShopCreate(generics.CreateAPIView):
 class ShopDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+
+
+
+######################### Amr ###############
+
+class NewShopView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    queryset = Shop.objects.order_by('-created_at')[:5]
+    serializer_class = Shopserializer

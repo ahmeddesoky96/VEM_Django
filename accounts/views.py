@@ -58,13 +58,19 @@ class ProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes([IsAuthenticated])
 def update_profile(request):
     profile = get_object_or_404(UserAccount, pk=request.user.id)
-    serializer = UserUpdateSerializer(profile, data=request.data)
+    serializer = UserUpdateSerializer(profile, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data,status = status.HTTP_200_OK)
     else:
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 
 
 

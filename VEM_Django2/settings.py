@@ -71,7 +71,7 @@ ROOT_URLCONF = 'VEM_Django2.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    # Add any other trusted origins here
+    "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_METHODS = [
     "DELETE",
