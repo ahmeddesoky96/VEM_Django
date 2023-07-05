@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'mall.apps.MallConfig',
     'accounts.apps.AccountsConfig',
 
-    # 'rest_framework_simplejwt',#
+    'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist'#
 
 ]
@@ -102,8 +102,8 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = ****
-EMAIL_HOST_USER = '**********'
-EMAIL_HOST_PASSWORD = '***********'
+EMAIL_HOST_USER = '**************'
+EMAIL_HOST_PASSWORD = '************'
 DEFAULT_FROM_EMAIL = '******************'
 EMAIL_USE_TLS = True
 
@@ -179,7 +179,11 @@ SIMPLE_JWT = {
 }
 
 
+# DOMAIN = '127.0.0.1:3000'
 
+SITE_NAME = 'VEM Team'
+##'activate/{uid}/{token}'
+# EMAIL_BACKEND = 'custom_email_backend.CustomEmailBackend'
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
