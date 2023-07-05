@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", get_user, name='get_user_info'),
+    path("edit", update_profile, name='update_user'),
     # path('', ProfileListCreateView.as_view(), name='profile-list-create'),
-    # path('<int:pk>', ProfileRetrieveUpdateDestroyView.as_view(), name='profile-retrieve-update-destroy'),
+    # path('edit', ProfileRetrieveUpdateDestroyView.as_view(), name='profile-retrieve-update-destroy'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
