@@ -110,26 +110,21 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':'vemdb',
-        'USER':'postgres',
-        'PASSWORD':'123',
+        'USER':'****',
+        'PASSWORD':'****',
         'HOST':'127.0.0.1',
         'POST':5432
     }
 }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = ****
-EMAIL_HOST_USER = '**********'
-EMAIL_HOST_PASSWORD = '***********'
-DEFAULT_FROM_EMAIL = '******************'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'Ur Email'
+EMAIL_HOST_PASSWORD = 'Ur password'
+DEFAULT_FROM_EMAIL = 'Ur Email'
 EMAIL_USE_TLS = True
 
 
-##### email: kinddark1996@gmail.com
-#### password : xqyowciecfusfbuq
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
